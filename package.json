@@ -1,0 +1,21 @@
+{
+  "name": "react-native-tesseract",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "react-native-pod": "^1.6.0",
+    "react-native-swift": "^1.0.0"
+  },
+  "scripts": {
+    "bridge": "react-native-swift-bridge",
+    "watch": "react-native-swift-bridge --watch"
+  },
+  "main": "index.js",
+  "devDependencies": {
+    "react-native-swift-bridge": "rhdeck/react-native-swift-bridge"
+  },
+  "pods": {
+    "TesseractOCRiOS": "4.0.0"
+  },
+  "needsSwiftFix": true,
+  "isSwift": true
+}
