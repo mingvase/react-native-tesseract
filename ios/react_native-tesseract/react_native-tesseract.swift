@@ -16,7 +16,13 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         guard newPath != dataPath else { resolve(true); return }
         dataPath = newPath;
         tesseract = nil
-        resolve(true)
+        let fm = FileManager.default
+        let tessPath = newPath + "/tessdata"
+        
+        guard fm.fileExists(atPath: dataPath) else {reject("data path does not exist", nil, nil); return }
+        let url = URL.init(fileURLWithPath: tessPath)
+        if !fm.fileExists(atPath: tessPath) { fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)}
+        resolve(tessPath)
     }
     var engineMode:G8OCREngineMode = .tesseractOnly
     @objc func setFastMode(_ newFast:Bool, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -30,11 +36,32 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         if let t = tesseract {
             return t
         } else {
-            guard let t = G8Tesseract(language: language, configDictionary: [:], configFileNames:nil, cachesRelatedDataPath: dataPath, engineMode: engineMode) else { return nil }
-            t.delegate = self
-            tesseract = t
-            return t
+            var t: G8Tesseract?
+            if let _ = dataPath {
+                t = G8Tesseract(language: language, configDictionary: [:], configFileNames: [], absoluteDataPath: dataPath, engineMode: engineMode, copyFilesFromResources: false)
+            } else {
+                t = G8Tesseract(language: language, engineMode: engineMode)
+            }
+            guard let tt = t else { return nil }
+            tt.delegate = self
+            tesseract = tt
+            return tt
         }
+    }
+    func confirmDataInDataPath(language: String) -> Bool {
+        //check for tessdata under datapath
+        guard let dp = dataPath else { return true }
+        let ss = language.split(separator: "+")
+        var isOK = true
+        let fm = FileManager.default
+        let tessPath = dataPath + "/tessdata"
+        
+        ss.forEach() { s in
+            guard isOK else { return }
+            let thisPath = tessPath + "/" + s + ".traineddata"
+            if fm.fileExists(atPath: thisPath) { isOK = false}
+        }
+        return isOK
     }
     func recognizeImage(_ image:UIImage, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         guard let x = getTesseract() else { reject("No tesseract initialized", nil, nil) ; return }
