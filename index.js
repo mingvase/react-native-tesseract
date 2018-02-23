@@ -1,6 +1,9 @@
 import { NativeModules } from "react-native";
 const RNTesseract = NativeModules.RNTesseract;
 async function setLanguage(language) {
+  if (typeof language == "array") {
+    language = language.join("+");
+  }
   return await RNTesseract.setLanguage(language);
 }
 async function setDataPath(dataPath) {
