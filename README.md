@@ -9,7 +9,7 @@ yarn add rhdeck/react-native-tesseract
 react-native link
 ```
 
-Note that this package has two peer dependencies that need to be installed. Quick way:
+Note that this package has two peer dependencies that need to be installed: [react-native-swift](https://npmjs.org.package.react-native-swift) and [react-native-pod](https://npmjs.org/package/react-native-pod). Quick way to install them dynamicallyis to use [promote-peer-dependencies](https://npmjs.com/promote-peer-dependencies):
 
 ```
 yarn global add promote-peer-dependencies
@@ -26,13 +26,15 @@ react-native link
 
 # Usage
 
+(Currently just key functionality)
+
 ## async setLanguage(newLanguage: String | [String])
 
 Sets the language(s) for use. Pass array for multiple languages. Note that the language identifier(s) need(s) to be in the format that the trained tessdata is in, e.g. from the [tessdata repository](https://github.com/tesseract-ocr/tessdata/) "eng" for English, etc.
 
 ## async setDataPath(newPath: String)
 
-Sets the path for the trained data. Defaults to null, which expects it to be bundled with the app in a directory called "tessdata". Set it to a user path to allow on-the-fly downloading, which is convenient!
+Sets the path for the trained data. Set it to a user path to allow on-the-fly downloading, which is convenient!
 
 ## async setFastMode(isFast: Boolean)
 
@@ -40,38 +42,17 @@ Set whether to use less-accurate tesseract only mode (default) or the slower but
 
 ## async recognizeFile(path: String)
 
-Scan a saved jpg or png file on disk and return the text.
+Scan a saved jpg or png file on disk and return the text. This can take several seconds!
 
-# Example TODO
+# Example Template
 
-(Assuming a little help from react-native-camera and react-native-fs)
+See [react-native-template-tesseractocr](https://npmjs.com/package/react-native-template-tesseractocr) or just implement as follows:
 
-```javascript
-import RNFS from 'react-native-fs'
-import RNTesseract from 'react-native-tesseract'
-import {RNCamera} from 'react-native-camera'
-export default class App extends Component {
-    return (
-        <TouchableOpacity onPress={()=>{
-            this.camera
-        }}>
-            <RNCamera    ref={(cam)=> {this.camera = cam}}>
-                <Text>{this.state.text}</Text>
-            </Camera>
-        </TouchableOpacity>
-    )
-}
-
-
-(async () => {
-    const tempPath = RNFS.TemporaryDirectoryPath + "/eng.trainddata"
-    const sourceurl = 'https://github.com/tesseract-ocr/tessdata/blob/master/eng.traineddata?raw=true'
-    const {promise, jobid} = RNFS.downloadFile({fromUrl: sourceurl, toFile: tempPath})
-    const done = await promise;
-    await RNTesseract.setLanguage('eng');
-    await RNTesseract.setDataPath(RNFS.TemporaryDirectoryPath)
-    await RNTesseract.isFastMode(true)
-    //Get an image
-
-})();
 ```
+react-native init mytesstest --template tesseractocr
+cd mytesstest
+react-native setdevteam
+react-native run-ios --device
+```
+
+(Note that [react-native-setdevteam](https://npmjs.com/package/react-native-setdevteam) will set your development team to let you sign and deploy your app to device)
