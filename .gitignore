@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+ios/react_native-tesseract.xcodeproj/xcuserdata/ray.xcuserdatad/xcschemes/xcschememanagement.plist
+ios/react_native-tesseract.xcodeproj/xcuserdata/ray.xcuserdatad/xcschemes/xcschememanagement.plist
