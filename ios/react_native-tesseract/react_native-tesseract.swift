@@ -19,18 +19,14 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         tesseract = nil
         let fm = FileManager.default
         let tessPath = newPath
-        
-        //guard fm.fileExists(atPath: newPath) else {reject("data path does not exist", nil, nil); return }
         let url = URL(fileURLWithPath: tessPath)
-        print("Trying to write url: " + url.absoluteString)
         if !fm.fileExists(atPath: tessPath) {
             guard let _ = try? fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil) else {
                 print("Failed to create subdirectory")
-                reject("Could not create subdirectory", nil, nil)
+                reject("no_path", "Could not create subdirectory", nil)
                 return
             }
         }
-        print("I made this path: " + tessPath)
         resolve(tessPath)
     }
     var engineMode:G8OCREngineMode = .tesseractOnly
@@ -77,34 +73,34 @@ class RNTesseract: NSObject, G8TesseractDelegate {
     }
     @objc
     func getTessDataPath(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard let tdp = tessDataPath() else { reject("No writeable path", nil, nil); return}
+        guard let tdp = tessDataPath() else { reject("no_path", "No writeable path", nil); return}
         resolve(tdp)
     }
     func recognizeImage(_ image:UIImage, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        guard !recognizing else { reject("Already running recognizer", nil, nil); return}
-        guard let x = getTesseract() else { reject("No tesseract initialized", nil, nil) ; return }
-        x.image = image
-        recognizing = true
+        guard !recognizing else { reject("isrunning", "Already running recognizer", nil); return}
         DispatchQueue(label: "tesseract").async() {
+            guard let x = self.getTesseract() else { reject("no_tesseract", "No tesseract initialized", nil) ; return }
+            x.image = image
+            self.recognizing = true
             if x.recognize() {
                 let text = x.recognizedText
                 resolve(text)
             } else {
-                reject("Recognize returned false", nil, nil)
+                reject("tesseract_failed", "Recognize returned false", nil)
             }
             self.recognizing = false;
         }
     }
     @objc func recognizeCachedImage(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        guard let i = RNTesseract.cachedImage else { reject("No cached image", nil, nil); return }
+        guard let i = RNTesseract.cachedImage else { reject("no_image", "No cached image", nil); return }
         recognizeImage(i, resolve: resolve, reject: reject)
     }
     @objc func recognizeFile(_ path:String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        guard let image = UIImage(contentsOfFile: path) else { reject ("Could not open image file: " + path, nil, nil); return }
+        guard let image = UIImage(contentsOfFile: path) else { reject ("no_image", "Could not open image file: " + path, nil); return }
         recognizeImage(image, resolve: resolve, reject: reject)
     }
     @objc func recognizeURL(_ urlString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard let url = URL(string: urlString) else { reject("Invalid URL",nil, nil); return}
+        guard let url = URL(string: urlString) else { reject("no_image", "Invalid URL",nil); return}
         let path = url.path
         recognizeFile(path, resolve: resolve, reject: reject)
     }
