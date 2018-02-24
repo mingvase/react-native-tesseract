@@ -6,7 +6,7 @@ async function setLanguage(language) {
   }
   return await RNTesseract.setLanguage(language);
 }
-async function setBaseDataPath(dataPath) {
+async function setDataPath(dataPath) {
   return await RNTesseract.setDataPath(dataPath);
 }
 async function setFastMode(isFast) {
@@ -48,7 +48,7 @@ function getURLsForLanguages(languages) {
 
 export default {
   setLanguage,
-  setBaseDataPath,
+  setDataPath,
   setFastMode,
   recognizeCachedImage,
   recognizeFile,
