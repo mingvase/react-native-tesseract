@@ -52,7 +52,14 @@ See [react-native-template-tesseractocr](https://npmjs.com/package/react-native-
 react-native init mytesstest --template tesseractocr
 cd mytesstest
 react-native setdevteam
+react-native link
 react-native run-ios --device
 ```
 
-(Note that [react-native-setdevteam](https://npmjs.com/package/react-native-setdevteam) will set your development team to let you sign and deploy your app to device)
+## Note 1
+
+[react-native-setdevteam](https://npmjs.com/package/react-native-setdevteam) will set your development team to let you sign and deploy your app to device)
+
+## Note 2
+
+Experienced RN templaters will notice the call to `react-native link` up there. It's necessary, and feel free to hit me up with an issue or DM if you want to go into the bowels of why. (It has to do with `react-native-camera-clean`)
