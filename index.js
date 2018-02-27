@@ -7,6 +7,11 @@ async function setLanguage(language) {
   return await RNTesseract.setLanguage(language);
 }
 async function setDataPath(dataPath) {
+  var temp = dataPath;
+  if (temp.endsWith("/")) temp = temp.subString(0, temp.length - 1);
+  if (!temp.endsWith("/tessdata")) {
+    throw new Error("data Path must end with tessdata");
+  }
   return await RNTesseract.setDataPath(dataPath);
 }
 async function setFastMode(isFast) {
