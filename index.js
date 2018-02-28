@@ -95,6 +95,16 @@ async function setWaitSeconds(newSecondsToWait) {
 function getWaitSeconds() {
   return secondsToWait;
 }
+var thisScale = 0; //0 means apply no scaling
+async function setScale(newScale) {
+  newScale = parseFloat(newScale);
+  if (isNaN(newScale))
+    throw new Error("Scale must be a number between 0 and 100!");
+  if (newScale < 0) throw new Error("Scale cannot be negative");
+  if (newScale > 100) throw new error("Scale cannot be over 100");
+  thisScale = newScale;
+  return RNTesseract.setScale(newScale);
+}
 export default {
   setLanguage,
   setDataPath,
@@ -116,5 +126,6 @@ export default {
   getGrayscale,
   setWaitSeconds,
   getWaitSeconds,
-  availableOrientations: RNTesseract.orientations
+  availableOrientations: RNTesseract.orientations,
+  setScale
 };

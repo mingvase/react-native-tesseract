@@ -103,6 +103,18 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         }
         resolve(true)
     }
+    var scale:Float?
+    let maxScale:Float = 100.0
+    @objc func setScale(_ toValue: Float, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard toValue < maxScale else { reject("bad_scale", "Scale value is over " + String(maxScale), nil) ;return }
+        guard toValue >= 0 else { reject("bad_scale", "Scale value cannot be negative", nil); return}
+        if toValue > 0 {
+            scale = toValue
+        } else {
+            scale = nil
+        }
+        resolve(true)
+    }
     @objc func getTessDataPath(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let tdp = tessDataPath() else { reject("no_path", "No writeable path", nil); return}
         resolve(tdp)
@@ -114,11 +126,12 @@ class RNTesseract: NSObject, G8TesseractDelegate {
             if let y = self.charBlacklist { x.charBlacklist = y }
             if let y = self.charWhitelist { x.charWhitelist = y }
             x.maximumRecognitionTime = self.waitSeconds
-            if self.isGrayscale {
+            if self.isGrayscale { 
                 x.image = image .g8_grayScale()
             } else {
                 x.image = image
             }
+            if let yf = self.scale { x.image = self.resizeImage(image: x.image, scale: CGFloat(yf)) ?? x.image}
             self.recognizing = true
             if x.recognize() {
                 let text = x.recognizedText
@@ -165,5 +178,14 @@ class RNTesseract: NSObject, G8TesseractDelegate {
     ]
     func constantsToExport() -> [AnyHashable : Any]! {
         return ["Orientations": orientations.keys]
+    }
+    func resizeImage(image: UIImage, scale: CGFloat) -> UIImage? {
+        let newWidth =  image.size.width * scale
+        let newHeight = image.size.height * scale
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        image.draw(in: CGRect(x: 0,y: 0, width: newWidth, height:newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
     }
 }
