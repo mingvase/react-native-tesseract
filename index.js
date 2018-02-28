@@ -85,6 +85,18 @@ async function setGrayscale(useGrayscale) {
 function getGrayscale() {
   return isGrayscale;
 }
+var secondsToWait = 10;
+async function setWaitSeconds(newSecondsToWait) {
+  if (newSecondsToWait < 0 || newSecondsToWait > 99) {
+    throw new Error("wait seconds must be between 0 and 99");
+  }
+  secondsToWait = newSecondsToWait;
+  await RNTesseract.setWaitSeconds(newSecondsToWait);
+  return true;
+}
+async function getWaitSeconds() {
+  return secondsToWait;
+}
 
 export default {
   setLanguage,
@@ -104,5 +116,7 @@ export default {
   getCharBlacklist,
   getCharWhitelist,
   setGrayscale,
-  getGrayscale
+  getGrayscale,
+  setWaitSeconds,
+  getWaitSeconds
 };
