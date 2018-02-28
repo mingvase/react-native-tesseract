@@ -116,6 +116,8 @@ class RNTesseract: NSObject, G8TesseractDelegate {
             x.maximumRecognitionTime = self.waitSeconds
             if self.isGrayscale {
                 x.image = image .g8_grayScale()
+            } else {
+                x.image = image
             }
             self.recognizing = true
             if x.recognize() {
