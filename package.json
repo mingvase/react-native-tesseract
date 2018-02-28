@@ -1,6 +1,6 @@
 {
   "name": "react-native-tesseract",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "peerDependencies": {
     "react-native-pod": "^1.6.0",
     "react-native-swift": "^1.0.0"
