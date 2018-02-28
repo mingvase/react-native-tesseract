@@ -84,7 +84,7 @@ async function setGrayscale(useGrayscale) {
 function getGrayscale() {
   return isGrayscale;
 }
-var secondsToWait = 10;
+var secondsToWait = 30;
 async function setWaitSeconds(newSecondsToWait) {
   if (newSecondsToWait < 0 || newSecondsToWait > 99) {
     throw new Error("wait seconds must be between 0 and 99");

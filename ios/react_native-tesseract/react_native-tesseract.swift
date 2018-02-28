@@ -94,12 +94,12 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         }
         resolve(true)
     }
-    var waitSeconds:Double = 10
+    var waitSeconds:Double = 30
     @objc func setWaitSeconds(_ toValue:Double, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if toValue > 0 {
             waitSeconds = toValue
         } else {
-            waitSeconds = 10
+            waitSeconds = 30
         }
         resolve(true)
     }
