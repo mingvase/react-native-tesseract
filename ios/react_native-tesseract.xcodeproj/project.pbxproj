@@ -5,6 +5,7 @@
 	};
 	objectVersion = 48;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		5064F9E946B84321BDA06CD8 /* rn-swift-bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D33579BF7C94D5AA696C90A /* rn-swift-bridge.m */; };
 		71D8F38A1FB7AA9D0000973C /* react_native-tesseract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8F3891FB7AA9D0000973C /* react_native-tesseract.swift */; };
@@ -254,13 +255,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../../../ios/Pods/**",
-					"/Users/ray/Documents/tesstest3/ios/Pods/**",
 					"/Users/ray/Documents/tesstest4/ios/Pods/**",
-					"/Users/ray/Documents/tesstest5/ios/Pods/**",
-					"/Users/ray/Documents/tesstest6/ios/Pods/**",
-					"/Users/ray/Documents/tesstest7/ios/Pods/**",
-					"/Users/ray/Documents/tesstest9/ios/Pods/**",
-					"/Users/ray/Documents/tesstest8/ios/Pods/**",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
@@ -283,13 +278,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../../../ios/Pods/**",
-					"/Users/ray/Documents/tesstest3/ios/Pods/**",
 					"/Users/ray/Documents/tesstest4/ios/Pods/**",
-					"/Users/ray/Documents/tesstest5/ios/Pods/**",
-					"/Users/ray/Documents/tesstest6/ios/Pods/**",
-					"/Users/ray/Documents/tesstest7/ios/Pods/**",
-					"/Users/ray/Documents/tesstest9/ios/Pods/**",
-					"/Users/ray/Documents/tesstest8/ios/Pods/**",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
