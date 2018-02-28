@@ -50,6 +50,41 @@ function getURLsForLanguages(languages) {
     return getURLForLanguage(l);
   });
 }
+var thisWhitelist = null;
+async function setCharWhitelist(whitelist) {
+  if (typeof whitelist === "undefined" || whitelist === null) whitelist = "";
+  if (typeof whitelist === "array") {
+    whitelist = whitelist.join();
+    thisWhitelist = whitelist;
+    await RNTesseract.setCharWhitelist(whitelist);
+    return true;
+  }
+}
+function getCharWhitelist() {
+  return thisWhitelist;
+}
+var thisBlacklist = null;
+async function setCharBlacklist(blacklist) {
+  if (typeof blacklist === "undefined" || blacklist === null) blacklist = "";
+  if (typeof blacklist === "array") {
+    blacklist = blacklist.join();
+    thisBlacklist = blacklist;
+    await RNTesseract.setCharBlacklist(blacklist);
+    return true;
+  }
+}
+function getCharBlacklist() {
+  return thisBlacklist;
+}
+var isGrayscale = false;
+async function setGrayscale(useGrayscale) {
+  isGrayscale = useGrayscale;
+  await RNTesseract.setGrayscale(useGrayscale);
+  return true;
+}
+function getGrayscale() {
+  return isGrayscale;
+}
 
 export default {
   setLanguage,
@@ -63,5 +98,11 @@ export default {
   getURLsForLanguage,
   getURLsForLanguages,
   getLanguages,
-  recognizeURL
+  recognizeURL,
+  setCharBlacklist,
+  setCharWhitelist,
+  getCharBlacklist,
+  getCharWhitelist,
+  setGrayscale,
+  getGrayscale
 };

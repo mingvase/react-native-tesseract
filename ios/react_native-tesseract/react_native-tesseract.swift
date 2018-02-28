@@ -71,8 +71,35 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         guard let dp = dataPath else { return nil }
         return dp //+ "/tessdata"
     }
-    @objc
-    func getTessDataPath(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    var isGrayscale:Bool = false
+    @objc func setGrayscale(_ toValue:Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        isGrayscale = toValue
+    }
+    var charWhitelist:String?
+    @objc func setCharWhitelist(_ toValue:String, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if toValue.count > 0 {
+            charWhitelist = toValue
+        } else {
+            charWhitelist = nil
+        }
+    }
+    var charBlacklist:String?
+    @objc func setCharBlacklist(_ toValue:String, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if toValue.count > 0 {
+            charBlacklist = toValue
+        } else {
+            charBlacklist = nil
+        }
+    }
+    var waitSeconds:Int = 10
+    @objc func setWaitSeconds(_ toValue:Int, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if toValue > 0 {
+            waitSeconds = toValue
+        } else {
+            waitSeconds = 10
+        }
+    }
+    @objc func getTessDataPath(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let tdp = tessDataPath() else { reject("no_path", "No writeable path", nil); return}
         resolve(tdp)
     }
@@ -80,7 +107,13 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         guard !recognizing else { reject("isrunning", "Already running recognizer", nil); return}
         DispatchQueue(label: "tesseract").async() {
             guard let x = self.getTesseract() else { reject("no_tesseract", "No tesseract initialized", nil) ; return }
-            x.image = image
+            if let y = self.charBlacklist { x.charBlacklist = y }
+            if let y = self.charWhitelist { x.charWhitelist = y }
+            if let y = self.waitSeconds { x.maximumRecognitionTime = y }
+           
+            if self.isGrayscale {
+                x.image = image .g8_grayScale()
+            }
             self.recognizing = true
             if x.recognize() {
                 let text = x.recognizedText
