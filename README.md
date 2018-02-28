@@ -36,6 +36,8 @@ Sets the language(s) for use. Pass array for multiple languages. Note that the l
 
 Sets the path for the trained data. Set it to a user path to allow on-the-fly downloading, which is convenient!
 
+**Important** This path has to end with a directory called `tessdata`. Its just a quirk of how the tesseract pod works.
+
 ## async setFastMode(isFast: Boolean)
 
 Set whether to use less-accurate tesseract only mode (default) or the slower but more-accurage tesseract+cube method.
