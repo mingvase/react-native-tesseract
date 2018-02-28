@@ -79,8 +79,7 @@ function getCharBlacklist() {
 var isGrayscale = false;
 async function setGrayscale(useGrayscale) {
   isGrayscale = useGrayscale;
-  await RNTesseract.setGrayscale(useGrayscale);
-  return true;
+  return await RNTesseract.setGrayscale(useGrayscale);
 }
 function getGrayscale() {
   return isGrayscale;
@@ -91,13 +90,11 @@ async function setWaitSeconds(newSecondsToWait) {
     throw new Error("wait seconds must be between 0 and 99");
   }
   secondsToWait = newSecondsToWait;
-  await RNTesseract.setWaitSeconds(newSecondsToWait);
-  return true;
+  return await RNTesseract.setWaitSeconds(newSecondsToWait);
 }
-async function getWaitSeconds() {
+function getWaitSeconds() {
   return secondsToWait;
 }
-
 export default {
   setLanguage,
   setDataPath,
@@ -118,5 +115,6 @@ export default {
   setGrayscale,
   getGrayscale,
   setWaitSeconds,
-  getWaitSeconds
+  getWaitSeconds,
+  availableOrientations: RNTesseract.orientations
 };

@@ -74,6 +74,7 @@ class RNTesseract: NSObject, G8TesseractDelegate {
     var isGrayscale:Bool = false
     @objc func setGrayscale(_ toValue:Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         isGrayscale = toValue
+        resolve(true)
     }
     var charWhitelist:String?
     @objc func setCharWhitelist(_ toValue:String, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -82,6 +83,7 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         } else {
             charWhitelist = nil
         }
+        resolve(true)
     }
     var charBlacklist:String?
     @objc func setCharBlacklist(_ toValue:String, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -90,14 +92,16 @@ class RNTesseract: NSObject, G8TesseractDelegate {
         } else {
             charBlacklist = nil
         }
+        resolve(true)
     }
-    var waitSeconds:Int = 10
-    @objc func setWaitSeconds(_ toValue:Int, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    var waitSeconds:Double = 10
+    @objc func setWaitSeconds(_ toValue:Double, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if toValue > 0 {
             waitSeconds = toValue
         } else {
             waitSeconds = 10
         }
+        resolve(true)
     }
     @objc func getTessDataPath(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let tdp = tessDataPath() else { reject("no_path", "No writeable path", nil); return}
@@ -109,15 +113,20 @@ class RNTesseract: NSObject, G8TesseractDelegate {
             guard let x = self.getTesseract() else { reject("no_tesseract", "No tesseract initialized", nil) ; return }
             if let y = self.charBlacklist { x.charBlacklist = y }
             if let y = self.charWhitelist { x.charWhitelist = y }
-            if let y = self.waitSeconds { x.maximumRecognitionTime = y }
-           
+            x.maximumRecognitionTime = self.waitSeconds
             if self.isGrayscale {
                 x.image = image .g8_grayScale()
             }
             self.recognizing = true
             if x.recognize() {
                 let text = x.recognizedText
-                resolve(text)
+                let boxes = x.recognizedBlocks(by: .block)
+                let obj:[String: Any?] = [
+                    "text": text,
+                    "blocks": boxes,
+                    "orientation": (self.orientations as NSDictionary).allKeys(for: x.orientation).first as? String
+                ]
+                resolve(obj)
             } else {
                 reject("tesseract_failed", "Recognize returned false", nil)
             }
@@ -145,5 +154,14 @@ class RNTesseract: NSObject, G8TesseractDelegate {
     }
     @objc func clearCachedImage(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         RNTesseract.cachedImage = nil
+    }
+    let orientations:[String: G8Orientation] = [
+        "pageDown": G8Orientation.pageDown,
+        "pageLeft": G8Orientation.pageLeft,
+        "pageRight": G8Orientation.pareRight, //Yes this is a typo in the original pod
+        "pageUp": G8Orientation.pageUp
+    ]
+    func constantsToExport() -> [AnyHashable : Any]! {
+        return ["Orientations": orientations.keys]
     }
 }
